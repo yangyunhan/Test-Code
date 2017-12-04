@@ -48,7 +48,7 @@ $(function() {
          * 来搞清楚我们是怎么实现隐藏/展示菜单元素的。
          */
         it('is hide by default', function () {
-            expect($('body').className).toBe('menu-hidden');
+            expect($('body')[0].className).toBe('menu-hidden');
         });
          /* TODO:
           * 写一个测试用例保证当菜单图标被点击的时候菜单会切换可见状态。这个
