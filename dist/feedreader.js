@@ -23,52 +23,80 @@ $(function() {
         /* TODO:
          * 编写一个测试遍历 allFeeds 对象里面的所有的源来保证有链接字段而且链接不是空的。
          */
-        it('all have URL', function () {
-            $.each(allFeeds,function (index, value) {
-                expect(value.url).toBeDefined();
-                expect(value.url).not.toBe('');
+        var regularExpressionUrl = /(http\:\/\/)?([\w.]+)(\/[\w- \.\/\?%&=]*)?/gi;
+
+        allFeeds.forEach(function (item) {
+            it('url are defined and it is not empty', function () {
+                expect(item.url).toBeTruthy();
+                expect(item.url).toMatch(regularExpressionUrl);
             })
         });
+
         /* TODO:
          * 编写一个测试遍历 allFeeds 对象里面的所有的源来保证有名字字段而且不是空的。
          */
         it('all have name', function () {
             $.each(allFeeds,function (index, value) {
-                expect(value.name).toBeDefined();
-                expect(value.name).not.toBe('');
+                expect(value.name).toBeTruthy();
             })
         });
     });
 
     /* TODO: 写一个叫做 "The menu" 的测试用例 */
     describe('The menu', function () {
+        /*var $menuIcon, $body;
+        beforeEach(function() {
+            $menuIcon = $('.menu-icon-link');
+            $body = $('body');
+        });
+        afterEach(function() {
+            $menuIcon = null;
+            $body = null;
+        });
+        it('is hidden by default', function() {
+            expect($body.hasClass('menu-hidden')).toBeTruthy();
+        });
+        it('should change visibility when the menu icon is clicked', function() {
+            $menuIcon.trigger('click');
+            expect($body.hasClass('menu-hidden')).toBeFalsy();
+            $menuIcon.trigger('click');
+            expect($body.hasClass('menu-hidden')).toBeTruthy();
+        });*/
 
+        var $icon;
+        var $body;
+        var number;
+        beforeEach(function() {
+            $icon = $('.menu-icon-link');
+            $body = $('body');
+            number = 0;
+        });
         /* TODO:
          * 写一个测试用例保证菜单元素默认是隐藏的。你需要分析 html 和 css
          * 来搞清楚我们是怎么实现隐藏/展示菜单元素的。
          */
         it('is hide by default', function () {
-            expect($('body')[0].className).toBe('menu-hidden');
+            expect($body.attr('class')).toBe('menu-hidden');
         });
          /* TODO:
           * 写一个测试用例保证当菜单图标被点击的时候菜单会切换可见状态。这个
           * 测试应该包含两个 expectation ： 当点击图标的时候菜单是否显示，
           * 再次点击的时候是否隐藏。
           */
-         it('will toggle the visible state when the menu icon is clicked',function () {
-             var icon = $('.menu-icon-link');
-             var body = $('body');
-             var number = 0;
-             icon.on('click',function () {
+        it('will toggle the visible state when the menu icon is clicked',function () {
+             $icon.click(function () {
                  number ++;
                  if(number % 2 === 1){
-                     expect(body.className).toBe('');
+                     console.log('display');
+                     expect($body.hasClass('menu-hidden')).toBeFalsy();
+
                  }else {
-                     expect(body.className).toBe('menu-hidden');
+                     console.log('hide');
+                     expect($body.hasClass('menu-hidden')).toBeTruthy();
                  }
-             })
+             });
          })
-    })
+    });
     /* TODO: 13. 写一个叫做 "Initial Entries" 的测试用例 */
     describe('Initial Entries', function () {
         /* TODO:
@@ -95,15 +123,25 @@ $(function() {
          * 写一个测试保证当用 loadFeed 函数加载一个新源的时候内容会真的改变。
          * 记住，loadFeed() 函数是异步的。
          */
-        var firstItem = $('.feed').find('h2');
+        var firstItem;
         beforeEach(function (done) {
-            loadFeed(1, function () {
-                done();
+            originalTimeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
+            jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000;
+
+            loadFeed(0, function () {
+                firstItem = $('.feed').find('h2');
+                loadFeed(1, function () {
+                    done();
+                });
             });
         });
         it('will real change', function (done) {
+            console.log(firstItem.find('h2'));
             expect($('.feed').find('h2')[0].childNodes[0]).not.toBe(firstItem[0].childNodes[0]);
             done();
+        });
+        afterEach(function () {
+            jasmine.DEFAULT_TIMEOUT_INTERVAL = originalTimeout;
         })
     })
 }());
