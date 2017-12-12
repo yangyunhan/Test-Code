@@ -44,32 +44,11 @@ $(function() {
 
     /* TODO: 写一个叫做 "The menu" 的测试用例 */
     describe('The menu', function () {
-        /*var $menuIcon, $body;
-        beforeEach(function() {
-            $menuIcon = $('.menu-icon-link');
-            $body = $('body');
-        });
-        afterEach(function() {
-            $menuIcon = null;
-            $body = null;
-        });
-        it('is hidden by default', function() {
-            expect($body.hasClass('menu-hidden')).toBeTruthy();
-        });
-        it('should change visibility when the menu icon is clicked', function() {
-            $menuIcon.trigger('click');
-            expect($body.hasClass('menu-hidden')).toBeFalsy();
-            $menuIcon.trigger('click');
-            expect($body.hasClass('menu-hidden')).toBeTruthy();
-        });*/
-
         var $icon;
         var $body;
-        var number;
         beforeEach(function() {
             $icon = $('.menu-icon-link');
             $body = $('body');
-            number = 0;
         });
         /* TODO:
          * 写一个测试用例保证菜单元素默认是隐藏的。你需要分析 html 和 css
@@ -84,17 +63,10 @@ $(function() {
           * 再次点击的时候是否隐藏。
           */
         it('will toggle the visible state when the menu icon is clicked',function () {
-             $icon.click(function () {
-                 number ++;
-                 if(number % 2 === 1){
-                     console.log('display');
-                     expect($body.hasClass('menu-hidden')).toBeFalsy();
-
-                 }else {
-                     console.log('hide');
-                     expect($body.hasClass('menu-hidden')).toBeTruthy();
-                 }
-             });
+            $icon.trigger('click');
+            expect($body.hasClass('menu-hidden')).toBeFalsy();
+            $icon.trigger('click');
+            expect($body.hasClass('menu-hidden')).toBeTruthy();
          })
     });
     /* TODO: 13. 写一个叫做 "Initial Entries" 的测试用例 */
